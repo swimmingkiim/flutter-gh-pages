@@ -29,6 +29,12 @@ inputs:
   remote-origin-url:
     description: 'Remote origin url to avoid 403 error'
     required: true
+  user-email:
+    description: 'github email'
+    required: true
+  user-name:
+    description: 'github user name'
+    required: true
 
 runs:
   using: 'composite'
@@ -39,10 +45,10 @@ runs:
     - run: flutter build web --release --web-renderer=${{inputs.webRenderer}} --base-href ${{inputs.baseHref}} ${{inputs.customArgs}}
       shell: bash
       working-directory: ${{inputs.workingDir}}
-    - run: git config user.name github-actions
+    - run: git config user.name ${{inputs.user-name}}
       shell: bash
       working-directory: ${{inputs.workingDir}}
-    - run: git config user.email github-actions@github.com
+    - run: git config user.email ${{inputs.user-email}}
       shell: bash
       working-directory: ${{inputs.workingDir}}
     - run: git --work-tree build/web add --all
