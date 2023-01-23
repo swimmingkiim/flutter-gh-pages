@@ -26,6 +26,9 @@ inputs:
     description: 'Custom args like: --dart-define="simple=example"'
     required: false
     default:
+  remote-origin-url:
+    description: 'Remote origin url to avoid 403 error'
+    required: true
 
 runs:
   using: 'composite'
@@ -45,7 +48,10 @@ runs:
     - run: git --work-tree build/web add --all
       shell: bash
       working-directory: ${{inputs.workingDir}}
-    - run: git commit -m "Automatic deployment by github-actions"
+    - run: git remote set-url origin ${{inputs.remote-origin-url}}
+      shell: bash
+      working-directory: ${{inputs.workingDir}}
+    - run: git commit -m "${{ github.event.head_commit.message }}"
       shell: bash
       working-directory: ${{inputs.workingDir}}
     - run: git push origin HEAD:${{inputs.targetBranch}} --force
